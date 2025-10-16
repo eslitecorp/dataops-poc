@@ -78,7 +78,6 @@ namespace ST_c551596b80f14010b40912bd1abf9b4d
          * */
         #endregion
 
-
 		/// <summary>
         /// This method is called when this script task executes in the control flow.
         /// Before returning from this method, set the value of Dts.TaskResult to indicate success or failure.
@@ -86,9 +85,9 @@ namespace ST_c551596b80f14010b40912bd1abf9b4d
         /// </summary>
 		public void Main()
 		{
-            String dbTableOrderStr = Dts.Variables["User::dbTableOrder"].Value.ToString(); // 1:CUSL_D,2:CUSL_H,2:CUST_CRD_LOG,2:CUST_CRD_OUT
-            List<String> dbTableOrderList = dbTableOrderStr.Split(',').ToList(); // [0]{1:CUSL_D},[1]{2:CUSL_H},[2]{2:CUST_CRD_LOG},[3]{2:CUST_CRD_OUT}
-            Dictionary<int, String> dbTableOrderMap = new Dictionary<int, String>(); // {key:1,value:CUSL_D},{key:2,value:CUSL_H,CUST_CRD_LOG,CUST_CRD_OUT}
+            String dbTableOrderStr = Dts.Variables["User::dbTableOrder"].Value.ToString();  // 1:CUSL_D,2:CUSL_H,2:CUST_CRD_LOG,2:CUST_CRD_OUT
+            List<String> dbTableOrderList = dbTableOrderStr.Split(',').ToList();            // [0]{1:CUSL_D},[1]{2:CUSL_H},[2]{2:CUST_CRD_LOG},[3]{2:CUST_CRD_OUT}
+            Dictionary<int, String> dbTableOrderMap = new Dictionary<int, String>();        // {key:1,value:CUSL_D},{key:2,value:CUSL_H,CUST_CRD_LOG,CUST_CRD_OUT}
             foreach (String tableName in dbTableOrderList)
             {
                 int orderKey = Int32.Parse(tableName.Split(':').ToArray()[0]);
