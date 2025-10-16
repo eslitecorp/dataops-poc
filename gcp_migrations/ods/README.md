@@ -4,9 +4,10 @@
 
 
 ## Choose the scheduled SSIS jobs, which outputs data to DM, as primary index
-DAILY_STAGE_MAIN_POSNEC
-- ./ods/mf/dept/building
-    - view: VW_MF_DEPT_BUILDING
+
+### DAILY_STAGE_MAIN_POSNEC
+- ./gcp_migrations/ods/etl_tasks/pipelines/mf/dept/building
+    - view:     VW_MF_DEPT_BUILDING
     - tables:
         - ods:  MF_DEPT_BUILDING
         - staging:  
@@ -15,7 +16,41 @@ DAILY_STAGE_MAIN_POSNEC
                 - POSNEC.Store
                 - POSNEC.BuildingM
 
-- VW_MF_DEPT_WERKS
-- VW_MF_POS_DISCOUNT
-- VW_TRANS_DETAIL_DISCOUNT
-- VW_TRANS_DETAIL_PACKAGE
+- ./gcp_migrations/ods/etl_tasks/pipelines/mf/dept/werks
+    - view:     VW_MF_DEPT_WERKS
+    - tables:
+        - ods:  MF_DEPT_WERKS
+        - staging:  
+            - tw:
+                - DW.DimDeptsList
+                - POSNEC.Store
+            
+- ./gcp_migrations/ods/etl_tasks/pipelines/mf/pos_discount
+    - view:     VW_MF_POS_DISCOUNT
+    - tables:
+        - ods:  MF_POS_DISCOUNT
+        - staging:  
+            - tw:
+                - POS.PROMOTIONAL
+                - POS.PMT_HEAD
+                - POS.PMT_REFFERENCE
+                - POSNEC.ProPeriod
+                - POSNEC.Pro
+
+- ./gcp_migrations/ods/etl_tasks/pipelines/trans/detail/discount
+    - view:     VW_TRANS_DETAIL_DISCOUNT
+    - tables:
+        - ods:  TRANS_DETAIL_DISCOUNT
+        - staging: 
+            - tw: 
+                - POSNEC.PosTradeM
+                - POSNEC.PosTradeD
+                - POSNEC.PosDiscountD
+
+- ./gcp_migrations/ods/etl_tasks/pipelines/trans/detail/package
+    - view:     VW_TRANS_DETAIL_PACKAGE
+    - tables:
+        - ods:  TRANS_DETAIL_PACKAGE
+        - staging: 
+            - tw: 
+                - POSNEC.PosPackage

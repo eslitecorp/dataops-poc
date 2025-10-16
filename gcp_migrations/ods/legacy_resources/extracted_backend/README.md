@@ -5,9 +5,8 @@ $ dotnet --version
 $ dotnet new console -o dataops-poc/gcp_migrations/ods/legacy_resources/extracted_backend
 ```
 
+## Remeber to add .gitignore for C#
 ``` bash
-### Remeber to add .gitignore for C#
-
 # =========================
 # .NET / C# / Visual Studio Code
 # =========================
