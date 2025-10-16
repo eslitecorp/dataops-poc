@@ -1,0 +1,25 @@
+# build artifacts
+bin/
+obj/
+artifacts/
+
+# IDE / tooling
+.vscode/
+.vs/
+.idea/
+*.user
+*.suo
+*.iml
+
+# OS junk
+.DS_Store
+Thumbs.db
+
+# logs / temps
+*.log
+*.tmp
+*.tlog
+
+# packages (若用 packages.lock.json 建議不要忽略本地 packages)
+**/packages/*
+!**/packages/repositories.config
