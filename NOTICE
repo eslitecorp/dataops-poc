@@ -1,0 +1,15 @@
+Apache License 2.0 Notice
+-------------------------
+
+This product includes software developed by
+Rex Shih (https://github.com/rexshih).
+
+Copyright 2025 Rex Shih
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+
+Modifications:
+- Added Dataflow streaming pipeline templates for GCP.
+- Integrated FastAPI endpoint with Pub/Sub publisher.
+- Updated Terraform module for Cloud Run + IAM integration.
