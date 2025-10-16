@@ -6,7 +6,7 @@ using System.Windows.Forms;
 using System.Collections.Generic;
 #endregion
 
-namespace ST_c997bf4ec200483288c747271c7dba74
+namespace ST_6bfbf82519434f06b6c3eee18d07e94f
 {
     /// <summary>
     /// ScriptMain is the entry point class of the script.  Do not change the name, attributes,
@@ -74,25 +74,79 @@ namespace ST_c997bf4ec200483288c747271c7dba74
          * */
         #endregion
 
-
 		/// <summary>
         /// This method is called when this script task executes in the control flow.
         /// Before returning from this method, set the value of Dts.TaskResult to indicate success or failure.
         /// To open Help, press F1.
         /// </summary>
 		public void Main()
-		{
-            Dictionary<String, Boolean> fileExistMap = (Dictionary<String, Boolean>)Dts.Variables["User::fileExistMap"].Value;
-            List<String> fileNonExistList = new List<string>();
-            foreach (String fileName in fileExistMap.Keys)
+        {
+            string dbParamName = Dts.Variables["User::dbParamName"].Value.ToString();
+            string dbCategory = Dts.Variables["User::dbCategory"].Value.ToString();
+            string dbParmValue = Dts.Variables["User::dbParamValue"].Value.ToString();
+            string emailTilte = Dts.Variables["$Project::EmailTilte"].Value.ToString();
+            List<string> dbParamNameList;
+            try {
+                dbParamNameList = (List<string>)Dts.Variables["User::dbParamNameList"].Value;
+            }
+            catch {
+                dbParamNameList = new List<string>();
+            }
+            dbParamNameList.Add(dbParamName);
+            Dts.Variables["User::dbParamNameList"].Value = dbParamNameList;
+            int dbParamValueInt = 0;
+            if ("int".Equals(dbCategory))
             {
-                if(!fileExistMap[fileName])
+                if (Int32.TryParse(dbParmValue, out dbParamValueInt))
                 {
-                    fileNonExistList.Add(fileName);
+                    switch (dbParamName) { 
+                        case "PoolingTimeOutMins":
+                            Dts.Variables["User::param_poolingTimeOutMins"].Value = dbParamValueInt;
+                            break;
+                        case "MaxConcurrent":
+                            Dts.Variables["User::param_maxConcurrent"].Value = dbParamValueInt;
+                            break;
+                        case "WmiTimeout":
+                            Dts.Variables["User::param_wmiTimeout"].Value = dbParamValueInt;
+                            break;
+                        case "WorkDateFlag":
+                            Dts.Variables["User::param_workDateFlag"].Value = dbParamValueInt;
+                            break;
+                        case "HeaderSkipRowsNo":
+                            Dts.Variables["User::param_headerSkipRowsNo"].Value = dbParamValueInt;
+                            break;
+                        case "ColumnNameRowNo":
+                            Dts.Variables["User::param_columnNameRowNo"].Value = dbParamValueInt;
+                            break;
+                    }
+                }
+                else
+                {
+                    Dts.Log("組態值設定錯誤:" + dbParamName , 999, null);
+                    Dts.Variables["User::mail_messageSource"].Value = "組態值:" + dbParamName + "設定錯誤" + dbParmValue + "必須為int型態";        
+                    Dts.Variables["User::mail_subject"].Value = emailTilte + "組態值設定錯誤-" + DateTime.Now.ToString("yyyyMMdd");
+                    Dts.TaskResult = (int)ScriptResults.Failure;
+                    return;
                 }
             }
-
-            Dts.Variables["User::fileNonExistList"].Value = fileNonExistList;
+            if ("string".Equals(dbCategory))
+            {
+                if (dbParamName.Equals("MailTo")) {
+                    Dts.Variables["User::mail_To"].Value = dbParmValue;
+                } else if (dbParamName.Equals("MailFrom"))
+                {
+                    Dts.Variables["User::mail_From"].Value = dbParmValue;
+                } else if (dbParamName.Equals("ZipFileNamePattern"))
+                {
+                    Dts.Variables["User::param_zipFileNamePattern"].Value = dbParmValue;
+                } else if (dbParamName.Equals("WorkDate"))
+                {
+                    Dts.Variables["User::param_WorkDate"].Value = dbParmValue;
+                } else if (dbParamName.Equals("SystemAdminEmail"))
+                {
+                    Dts.Variables["User::mail_ToAdmin"].Value = dbParmValue;
+                }
+            }
             Dts.TaskResult = (int)ScriptResults.Success;
 		}
 

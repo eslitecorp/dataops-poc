@@ -4,9 +4,10 @@ using System.Data;
 using Microsoft.SqlServer.Dts.Runtime;
 using System.Windows.Forms;
 using System.Collections.Generic;
+using System.Text;
 #endregion
 
-namespace ST_6bfbf82519434f06b6c3eee18d07e94f
+namespace ST_c997bf4ec200483288c747271c7dba74
 {
     /// <summary>
     /// ScriptMain is the entry point class of the script.  Do not change the name, attributes,
@@ -74,43 +75,26 @@ namespace ST_6bfbf82519434f06b6c3eee18d07e94f
          * */
         #endregion
 
-
 		/// <summary>
         /// This method is called when this script task executes in the control flow.
         /// Before returning from this method, set the value of Dts.TaskResult to indicate success or failure.
         /// To open Help, press F1.
         /// </summary>
 		public void Main()
-        {
-            string dbParamName = Dts.Variables["User::dbParamName"].Value.ToString();
-            string dbCategory = Dts.Variables["User::dbCategory"].Value.ToString();
-            string dbParmValue = Dts.Variables["User::dbParamValue"].Value.ToString();
-            
-            int dbParamValueInt = 0;
-            if ("int".Equals(dbCategory))
+		{
+            StringBuilder fileName = new StringBuilder();
+            String fileNonExistVal = Dts.Variables["User::fileNonExistVal"].Value.ToString();
+            String srcEkorg = Dts.Variables["$Package::srcEkorg"].Value.ToString();            
+            fileName.Append(fileNonExistVal);
+
+            DateTime dt = DateTime.Now;
+            if(!String.IsNullOrWhiteSpace(srcEkorg))
             {
-                if (Int32.TryParse(dbParmValue, out dbParamValueInt))
-                {
-                    switch (dbParamName) {                       
-                        case "srcFileTypeCheckFile":
-                            Dts.Variables["User::param_srcFileTypeCheckFile"].Value = dbParamValueInt;
-                            break;
-                        case "srcFileTypeRawData":
-                            Dts.Variables["User::param_srcFileTypeRawData"].Value = dbParamValueInt;
-                            break;
-                        case "srcFileTypeEmpty":
-                            Dts.Variables["User::param_srcFileTypeEmpty"].Value = dbParamValueInt;
-                            break;
-                        case "fileStatusNonExist":
-                            Dts.Variables["User::param_fileStatusNonExist"].Value = dbParamValueInt;
-                            break;
-                        case "fileStatusPatternNotMatched":
-                            Dts.Variables["User::param_fileStatusPatternNotMatched"].Value = dbParamValueInt;
-                            break;
-                    }
-                }
+                fileName.Append("_" + srcEkorg);
             }
-            
+            fileName.Append("_" + dt.ToString("yyyyMMddHHmmss"));
+
+            Dts.Variables["User::srcNonExistFileName"].Value = fileName.ToString();
             Dts.TaskResult = (int)ScriptResults.Success;
 		}
 

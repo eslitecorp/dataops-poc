@@ -4,7 +4,6 @@ using System.Data;
 using Microsoft.SqlServer.Dts.Runtime;
 using System.Windows.Forms;
 using System.Collections.Generic;
-using System.Text;
 #endregion
 
 namespace ST_c997bf4ec200483288c747271c7dba74
@@ -75,7 +74,6 @@ namespace ST_c997bf4ec200483288c747271c7dba74
          * */
         #endregion
 
-
 		/// <summary>
         /// This method is called when this script task executes in the control flow.
         /// Before returning from this method, set the value of Dts.TaskResult to indicate success or failure.
@@ -83,19 +81,17 @@ namespace ST_c997bf4ec200483288c747271c7dba74
         /// </summary>
 		public void Main()
 		{
-            StringBuilder fileName = new StringBuilder();
-            String fileNonExistVal = Dts.Variables["User::fileNonExistVal"].Value.ToString();
-            String srcEkorg = Dts.Variables["$Package::srcEkorg"].Value.ToString();            
-            fileName.Append(fileNonExistVal);
-
-            DateTime dt = DateTime.Now;
-            if(!String.IsNullOrWhiteSpace(srcEkorg))
+            Dictionary<String, Boolean> fileExistMap = (Dictionary<String, Boolean>)Dts.Variables["User::fileExistMap"].Value;
+            List<String> fileNonExistList = new List<string>();
+            foreach (String fileName in fileExistMap.Keys)
             {
-                fileName.Append("_" + srcEkorg);
+                if(!fileExistMap[fileName])
+                {
+                    fileNonExistList.Add(fileName);
+                }
             }
-            fileName.Append("_" + dt.ToString("yyyyMMddHHmmss"));
 
-            Dts.Variables["User::srcNonExistFileName"].Value = fileName.ToString();
+            Dts.Variables["User::fileNonExistList"].Value = fileNonExistList;
             Dts.TaskResult = (int)ScriptResults.Success;
 		}
 
