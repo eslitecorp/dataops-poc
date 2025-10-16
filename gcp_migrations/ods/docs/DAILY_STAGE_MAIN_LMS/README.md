@@ -1,0 +1,216 @@
+## DAILY_STAGE_MAIN_LMS
+- ./gcp_migrations/ods/etl_tasks/pipelines/mf/member
+    - view:   VW_MF_MEMBER
+    - tables:
+        - ods:  
+            - MF_MEMBER
+        - staging:  
+            - tw:
+                - MF_MEMBER:
+                    - LMS.CUST_OUT
+                    - LMS.CUSL_H
+                    - LMS.CUST_CRD_CAL
+                    - EC.ACCOUNT_DATA 
+
+- ./gcp_migrations/ods/etl_tasks/pipelines/mf/member/badge
+    - view:   VW_MF_MEMBER_BADGE
+    - tables:
+        - ods:  
+            - MF_MEMBER_BADGE
+        - staging:  
+            - tw:
+                - MF_MEMBER_BADGE:
+                    - LMS.BADGE_LVL_CHG
+                
+- ./gcp_migrations/ods/etl_tasks/pipelines/mf/member/card
+    - view:   VW_MF_MEMBER_CARD
+    - tables:
+        - ods:  
+            - MF_MEMBER_CARD
+        - staging:  
+            - tw:
+                - MF_MEMBER_CARD:
+                    - LMS.CUST_CRD_CAL
+
+- ./gcp_migrations/ods/etl_tasks/pipelines/mf/member/card/family
+    - view:   VW_MF_MEMBER_CARD_FAMILY
+    - tables:
+        - ods:  
+            - MF_MEMBER_CARD_FAMILY
+        - staging:  
+            - tw:
+                - MF_MEMBER_CARD_FAMILY:
+                    - LMS.CUST_FAMILY
+
+- ./gcp_migrations/ods/etl_tasks/pipelines/mf/member/card/ref
+    - view:   VW_MF_MEMBER_CARD_REF
+    - tables:
+        - ods:  
+            - MF_MEMBER_CARD_REF
+        - staging:  
+            - tw:
+                - MF_MEMBER_CARD_REF:
+                    - LMS.CARD
+
+- ./gcp_migrations/ods/etl_tasks/pipelines/mf/member/discount
+    - view:   VW_MF_MEMBER_DISCOUNT
+    - tables:
+        - ods:  
+            - MF_MEMBER_DISCOUNT
+        - staging:  
+            - tw:
+                - MF_MEMBER_DISCOUNT:
+                    - LMS.PNTEX_H
+
+- ./gcp_migrations/ods/etl_tasks/pipelines/mf/member/extend
+    - view:     VW_MF_MEMBER_EXTEND
+    - tables:
+        - ods:  
+            - MF_MEMBER_EXTEND
+        - staging:  
+            - tw:
+                - MF_MEMBER_EXTEND:
+                    - LMS.CUST_LVL_CHG
+
+- ./gcp_migrations/ods/etl_tasks/pipelines/mf/mgm
+    - view:     VW_MF_MGM
+    - tables:
+        - ods:  
+            - MF_MGM
+        - staging:  
+            - tw:
+                - MF_MGM: 
+                    - LMS.MGM_DETAIL
+
+- ./gcp_migrations/ods/etl_tasks/pipelines/trans/detail/item
+    - view:     VW_TRANS_DETAIL_ITEM
+    - tables:
+        - ods:  
+            - TRANS_DETAIL_ITEM_EC
+            - TRANS_DETAIL_ITEM_ECS2
+            - TRANS_DETAIL_ITEM_LMS
+            - TRANS_DETAIL_ITEM_NEC
+            - TRANS_DETAIL_ITEM_HYPOS
+            - TRANS_DETAIL_ITEM_HYPOS_A0101571
+        - staging:  
+            - tw:
+                - TRANS_DETAIL_ITEM_EC:
+                    - EC.ES_SAP_SUBORDERS
+                    - EC.ES_SAP_SUBORDERS_CANCEL
+                    - EC.ES_SAP_SUBPRICED_ITEMS
+                    - EC.ES_SAP_SUBPRICED_ITEMS_CANCEL
+                    - EC.O_Orderitems
+                - TRANS_DETAIL_ITEM_ECS2:
+                    - ECS2.SUB_ORDERS
+                    - ECS2.SUB_ORDER_ITEMS
+                    - ECS2.RETURN_SUB_ORDER_ITEMS
+                - TRANS_DETAIL_ITEM_LMS:
+                    - LMS.CUSL_H
+                    - LMS.CUSL_D
+                - TRANS_DETAIL_ITEM_NEC:
+                    - POSNEC.PosTradeM
+                    - POSNEC.PosTradeD
+                - TRANS_DETAIL_ITEM_HYPOS:
+                    - POS.TRN_HEAD
+                    - POS.TRN_DETAIL1
+                    - SAP_EARD.SP04
+                - TRANS_DETAIL_ITEM_HYPOS_A0101571:
+                    - POS.TRN_HEAD
+                    - POS.TRN_DETAIL1
+                    - SAP_EARD.SP04
+
+- ./gcp_migrations/ods/etl_tasks/pipelines/trans/detail/payment
+    - view:     VW_TRANS_DETAIL_PAYMENT
+    - tables:
+        - ods:  
+            - TRANS_DETAIL_PAYMENT_EC
+            - TRANS_DETAIL_PAYMENT_ECS2
+            - TRANS_DETAIL_PAYMENT_LMS
+            - TRANS_DETAIL_PAYMENT_NEC
+            - TRANS_DETAIL_PAYMENT_HYPOS
+        - staging:  
+            - tw:
+                - TRANS_DETAIL_PAYMENT_EC: 
+                    - EC.ES_SAP_SUBORDERS
+                    - POSNEC.CREDITCARDNO
+                    - EC.O_Orders
+                    - EC.O_CreditCard_AuthRec
+                - TRANS_DETAIL_PAYMENT_ECS2:
+                    - POSNEC.CREDITCARDNO
+                    - ECS2.SUB_ORDERS
+                    - ECS2.RETURN_SUB_ORDER_ITEMS
+                    - ECS2.MAIN_ORDERS
+                    - ECS2.SUB_ORDER_ITEMS
+                    - ECS2.CREDIT_CARD
+                - TRANS_DETAIL_PAYMENT_LMS:
+                    - LMS.CUSL_H
+                - TRANS_DETAIL_PAYMENT_NEC:
+                    - POSNEC.PosTradeM
+                    - POSNEC.PosPayment
+                    - POSNEC.CREDITCARDNO
+                    - POSNEC.CREDITCARDNO_UnionPay
+                - TRANS_DETAIL_PAYMENT_HYPOS:
+                    - POSNEC.CREDITCARDNO
+                    - POS.TRN_HEAD
+                    - POS.TRN_PAYMENT
+
+- ./gcp_migrations/ods/etl_tasks/pipelines/trans/freebie/evt
+    - view:     VW_TRANS_FREEBIE_EVT
+    - tables:
+        - ods:  
+            - TRANS_FREEBIE_EVT
+        - staging:  
+            - tw:
+                - TRANS_FREEBIE_EVT: 
+                    - LMS.CUSL_H
+
+- ./gcp_migrations/ods/etl_tasks/pipelines/trans/freebie/pntex
+    - view:     VW_TRANS_FREEBIE_PNTEX
+    - tables:
+        - ods:  
+            - TRANS_FREEBIE_PNTEX
+        - staging:  
+            - tw:
+                - TRANS_FREEBIE_PNTEX: 
+                    - LMS.PNTEX_REG
+                    - LMS.PNTEX_H
+
+- ./gcp_migrations/ods/etl_tasks/pipelines/trans/freebie/pntex/list
+    - view:     VW_TRANS_FREEBIE_PNTEX_LIST
+    - tables:
+        - ods:  
+            - TRANS_FREEBIE_PNTEX_LIST
+        - staging:  
+            - tw:
+                - TRANS_FREEBIE_PNTEX_LIST: 
+                    - LMS.PNTEX_LIST
+                    - LMS.GIFT
+
+- ./gcp_migrations/ods/etl_tasks/pipelines/trans/head
+    - view:     VW_TRANS_HEAD
+    - tables:
+        - ods:  
+            - TRANS_HEAD_EC
+            - TRANS_HEAD_ECS2
+            - TRANS_HEAD_LMS
+            - TRANS_HEAD_NEC
+            - TRANS_HEAD_HYPOS
+        - staging:  
+            - tw:
+                - TRANS_HEAD_EC:
+                    - EC.Account_Data
+                    - EC.ES_SAP_SUBORDERS
+                    - EC.ES_SAP_SUBORDERS_CANCEL
+                    - EC.Orders
+                - TRANS_HEAD_ECS2:
+                    - ECS2.SUB_ORDERS
+                    - ECS2.RETURN_SUB_ORDER_ITEMS
+                    - ECS2.MAIN_ORDERS
+                    - ECS2.SUB_ORDERS_ITEMS
+                    - EC.MEMBER_ESLITECARDNF
+                - TRANS_HEAD_LMS:
+                    - LMS.CUSL_H
+                - TRANS_HEAD_NEC:
+                    - POSNEC.PosTradeM
+                - TRANS_HEAD_HYPOS:
+                    - POS.TRN_HEAD
