@@ -85,8 +85,7 @@ namespace ST_af6001d683ba4f269e0f8f96c2b180e8
         /// </summary>
         public void Main()
         {
-            string[] totalParamArr = //
-                new string[] { "MaxConcurrent", "MailTo", "PoolingTimeOutMins" };
+            string[] totalParamArr = new string[] { "MaxConcurrent", "MailTo", "PoolingTimeOutMins" };
             string srcSysName = Dts.Variables["$Package::srcSysName"].Value.ToString();
             int workDateFlag = Int32.Parse(Dts.Variables["User::param_workDateFlag"].Value.ToString());
             string emailTilte = Dts.Variables["$Project::EmailTilte"].Value.ToString();
@@ -115,6 +114,7 @@ namespace ST_af6001d683ba4f269e0f8f96c2b180e8
                 Dts.Variables["User::mail_messageSource"].Value = "Daily Initial Job紀錄批號未正常更新!";
                 return;
             }
+            
             // -----------------------
             // 2. FileNamePattern
             // -----------------------
