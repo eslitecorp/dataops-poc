@@ -3,7 +3,8 @@
 ########################
 # 1) 基底執行階段（瘦身 + 非 root + 健康檢查）
 ########################
-FROM mcr.microsoft.com/dotnet/aspnet:8.0-bookworm-slim AS base
+#FROM mcr.microsoft.com/dotnet/aspnet:8.0-bookworm-slim AS base
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
 ENV ASPNETCORE_URLS=http://+:8080 \
     DOTNET_EnableDiagnostics=0 \
     COMPlus_ReadyToRun=0
@@ -22,13 +23,14 @@ USER appuser
 ########################
 # 2) 建置階段（最佳化快取）
 ########################
-FROM mcr.microsoft.com/dotnet/sdk:8.0-bookworm AS build
+#FROM mcr.microsoft.com/dotnet/sdk:8.0-bookworm AS build
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 
 # 先複製專案檔，最大化 restore 快取命中率
 # 若有多專案或中央套件管理，請一併 COPY Directory.Packages.props、NuGet.Config、Solution.sln
 COPY src/MyApp/*.csproj src/MyApp/
-COPY NuGet.Config ./
+#COPY NuGet.Config ./
 RUN dotnet restore src/MyApp/MyApp.csproj --locked-mode
 
 # 再複製其餘原始碼
