@@ -1,4 +1,4 @@
-# 2_parse_source_file_path_list.cs
+# parse_source_file_path_list.cs
 
 ## 📘 概要
 這個 **SSIS Script Task** 的用途是：  
