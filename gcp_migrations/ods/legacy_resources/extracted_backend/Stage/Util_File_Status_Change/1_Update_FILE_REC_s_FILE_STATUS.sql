@@ -1,0 +1,5 @@
+UPDATE dbo.FILE_REC
+SET FILE_STATUS = ?,
+    [SOURCEID] = ?,
+    [EXECUTIONID] = ?
+WHERE FILE_NAME = ?;

@@ -1,0 +1,43 @@
+INSERT INTO dbo.FILE_REC_HIS (
+    [FILE_NAME],
+    [FILE_STATUS],
+    [ROW_COUNT_REAL],
+    [CHECK_SUM_REAL],
+    [CHECK_FILE_NAME],
+    [ROW_COUNT],
+    [CHECK_SUM],
+    [SYS_NAME],
+    [ETL_FILE_LOADED_DATE],
+    [SOURCEID],
+    [EXECUTIONID],
+    [FILE_OP],
+    [HEADER_SKIP_ROWS],
+    [CHECK_VALUE],
+    [WORK_DATE],
+    [EKORG],
+    [TABLE_NAME],
+    [FILE_TYPE],
+    [MACHINE_NAME]
+)
+SELECT
+    [FILE_NAME],
+    [FILE_STATUS],
+    [ROW_COUNT_REAL],
+    [CHECK_SUM_REAL],
+    [CHECK_FILE_NAME],
+    [ROW_COUNT],
+    [CHECK_SUM],
+    [SYS_NAME],
+    GETDATE(),
+    ?,
+    ?,
+    [FILE_OP],
+    [HEADER_SKIP_ROWS],
+    [CHECK_VALUE],
+    [WORK_DATE],
+    [EKORG],
+    [TABLE_NAME],
+    [FILE_TYPE],
+    [MACHINE_NAME]
+FROM dbo.FILE_REC
+WHERE FILE_NAME = ?;
