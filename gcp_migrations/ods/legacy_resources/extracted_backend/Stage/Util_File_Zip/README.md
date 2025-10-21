@@ -33,7 +33,7 @@ zipFileAndRemove() 功能:
 - 呼叫 BinaryReadToEnd() 將整個檔案讀成 byte[]
 - 新建 zip 檔案，將檔案內容寫入 zip entry
 - 刪除原始檔案
->> ⚠️ BinaryReadToEnd() 只是將整個檔案載入記憶體再寫入 zip，不是監聽或抽取資料。
+> ⚠️ BinaryReadToEnd() 只是將整個檔案載入記憶體再寫入 zip，不是監聽或抽取資料。
 
 ---
 
@@ -43,7 +43,7 @@ zipFileAndRemove() 功能:
 - 工作區隔離：避免前一批與新批次混在一起
 - 可重試與清理方便：壓縮完可整批刪除
 - 對帳與審核：以資料夾劃分批次
->> 這是典型的 ETL 批次封存設計，並非緩存器或資料流 Buffer。
+> 這是典型的 ETL 批次封存設計，並非緩存器或資料流 Buffer。
 
 ---
 
