@@ -1,0 +1,114 @@
+x-airflow-common:
+  &airflow-common
+  image: apache/airflow:2.8.1
+  user: "${AIRFLOW_UID}:${AIRFLOW_GID}"
+  environment:
+    &airflow-env
+    AIRFLOW_USER: ${AIRFLOW_USER}
+    AIRFLOW_PWD: ${AIRFLOW_PWD}
+    AIRFLOW__CORE__EXECUTOR: LocalExecutor
+    AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@postgres/airflow
+    AIRFLOW__CORE__FERNET_KEY: ''
+    AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION: 'true'
+    AIRFLOW__CORE__LOAD_EXAMPLES: 'false'
+    AIRFLOW__API__AUTH_BACKENDS: ${AIRFLOW_AUTH_BACKENDS}
+    _PIP_ADDITIONAL_REQUIREMENTS: ''
+    TZ: Asia/Taipei 
+  volumes:
+    - ./airflow/config/connections.json:/opt/airflow/connections.json
+    - ./airflow/dags:/opt/airflow/dags
+    - ./airflow/logs:/opt/airflow/logs
+    - ./airflow/plugins:/opt/airflow/plugins
+    - /etc/localtime:/etc/localtime:ro
+  depends_on:
+    - postgres
+
+
+
+services:
+  postgres:
+    image: postgres:13
+    container_name: airflow-postgres
+    environment:
+      POSTGRES_USER: airflow
+      POSTGRES_PASSWORD: airflow
+      POSTGRES_DB: airflow
+    volumes:
+      - postgres-db-volume:/var/lib/postgresql/data
+    networks:
+      - dataops_net
+
+  airflow-webserver:
+    <<: *airflow-common
+    container_name: airflow-webserver
+    command: bash -c "airflow webserver"
+    ports:
+      - "8080:8080"
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "http://localhost:8080/health"]
+      interval: 10s
+      retries: 5
+      start_period: 10s
+      timeout: 5s
+    depends_on:
+      - postgres
+      - airflow-init
+    networks:
+      - dataops_net
+
+  airflow-scheduler:
+    <<: *airflow-common
+    container_name: airflow-scheduler
+    command: bash -c "airflow scheduler"
+    depends_on:
+      - postgres
+      - airflow-init
+    networks:
+      - dataops_net
+
+  airflow-triggerer:
+    <<: *airflow-common
+    container_name: airflow-triggerer
+    command: bash -c "airflow triggerer"
+    depends_on:
+      - postgres
+      - airflow-init
+    networks:
+      - dataops_net
+
+  airflow-init:
+    <<: *airflow-common
+    container_name: airflow-init
+    restart: on-failure
+    command: >
+      bash -c '
+        echo "[INIT] Initializing Airflow DB..."
+        airflow db init
+
+        echo "[INIT] Running DB migration..."
+        airflow db migrate
+
+        echo "[INIT] Importing connections..."
+        airflow connections import /opt/airflow/connections.json || true
+
+        echo "[INIT] Creating admin user..."
+        airflow users create \
+          --username "${AIRFLOW_USER}" \
+          --password "${AIRFLOW_PWD}" \
+          --firstname "Admin" \
+          --lastname "User" \
+          --role "Admin" \
+          --email "admin@example.com"
+      '
+    depends_on:
+      - postgres
+    networks:
+      - dataops_net
+
+volumes:
+  postgres-db-volume:
+
+networks:
+  dataops_net:
+    name: dataops_net
+    driver: bridge
