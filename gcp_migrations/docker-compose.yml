@@ -1,18 +1,21 @@
 x-airflow-common:
   &airflow-common
-  image: apache/airflow:2.8.1
+  build: 
+    context: .               
+    dockerfile: airflow.dockerfile
   user: "${AIRFLOW_UID}:${AIRFLOW_GID}"
   environment:
     &airflow-env
     AIRFLOW_USER: ${AIRFLOW_USER}
     AIRFLOW_PWD: ${AIRFLOW_PWD}
-    AIRFLOW__CORE__EXECUTOR: LocalExecutor
     AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@postgres/airflow
+    AIRFLOW__CORE__EXECUTOR: LocalExecutor
     AIRFLOW__CORE__FERNET_KEY: ''
     AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION: 'true'
     AIRFLOW__CORE__LOAD_EXAMPLES: 'false'
+    AIRFLOW__SCHEDULER__DAG_DIR_LIST_INTERVAL: "10"        # 預設 300 秒
+    AIRFLOW__SCHEDULER__MIN_FILE_PROCESS_INTERVAL: "10"    # 預設 30 秒
     AIRFLOW__API__AUTH_BACKENDS: ${AIRFLOW_AUTH_BACKENDS}
-    _PIP_ADDITIONAL_REQUIREMENTS: ''
     TZ: Asia/Taipei 
   volumes:
     - ./airflow/config/connections.json:/opt/airflow/connections.json
