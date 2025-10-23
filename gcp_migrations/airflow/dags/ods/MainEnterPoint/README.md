@@ -1,7 +1,7 @@
 
 
 ### SSIS視覺化流程方塊 與 DAG 的對照表
-|  順序 | Airflow `dag_id`                      | 對應程式碼檔案                              | SSIS 對應 UI 區塊描述                  |
+|  順序 | Airflow `dag_id`                      | 對應程式碼檔案                              | SSIS 對應 UI 區塊描述 (可搭配Screenshots查看)  |
 | :-: | :------------------------------------ | :----------------------------------- | :------------------------------- |
 |  1  | `MainEnterPoint__load_project_params` | `block_1_run_load_project_params.py` | 系統前置作業－從 `PROJECT_PARAMS` 載入系統參數 |
 |  2  | `MainEnterPoint__load_user_params` | `block_2_run_load_user_params.py` | 系統前置作業－從 `USER_PARAMS` 載入系統參數 |
