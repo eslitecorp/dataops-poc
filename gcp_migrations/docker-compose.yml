@@ -19,6 +19,7 @@ x-airflow-common:
     TZ: Asia/Taipei 
   volumes:
     - ./airflow/config/connections.json:/opt/airflow/connections.json
+    - ./airflow/include:/opt/airflow/include
     - ./airflow/dags:/opt/airflow/dags
     - ./airflow/logs:/opt/airflow/logs
     - ./airflow/plugins:/opt/airflow/plugins
