@@ -9,7 +9,7 @@ RUN apt-get update && apt-get install -y \
  && apt-get clean && rm -rf /var/lib/apt/lists/* \
  && mkdir -p /home/airflow/.local && chown -R airflow:root /home/airflow
 
-COPY requirements.txt requirements.txt
+COPY requirements-airflow.txt requirements-airflow.txt
 
 USER airflow
 ENV PATH="/home/airflow/.local/bin:${PATH}"
@@ -17,5 +17,5 @@ ENV PATH="/home/airflow/.local/bin:${PATH}"
 # 官方 constraints 安裝：確保 airflow-core 不被破壞
 RUN pip install --no-cache-dir \
       --constraint "https://raw.githubusercontent.com/apache/airflow/constraints-2.9.3/constraints-3.12.txt" \
-      -r requirements.txt
+      -r requirements-airflow.txt
 
