@@ -1,6 +1,9 @@
 apache-airflow-providers-microsoft-mssql==3.7.2
 pyodbc==5.1.0
 
+apache-airflow-providers-common-sql
+apache-airflow-providers-odbc
+
 apache-airflow-providers-google>=10.0.0
 google-cloud-bigquery==3.20.1
 google-cloud-storage==2.17.0
