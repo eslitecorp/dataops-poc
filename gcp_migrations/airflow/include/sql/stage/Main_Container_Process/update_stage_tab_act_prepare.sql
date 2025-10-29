@@ -1,0 +1,6 @@
+UPDATE [dbo].[STAGE_TAB_ACT]
+SET STATUS = 2
+WHERE NATIONALITY = ?
+  AND SYS_NAME    = ?
+  AND EKORG       = ?
+  AND TABLE_NAME  = ?

@@ -3,6 +3,12 @@ import re, json, logging
 from datetime import datetime
 
 
+def has_files(**context) -> bool:
+    ti = context["ti"]
+    files = ti.xcom_pull(task_ids="decide_process_table", key="do_table_list") or []
+    # True → 放行；False → Skip 下游
+    return len(files) > 0
+
 def decide_and_prepare(**context) -> bool:
     """
     讀取 table_name、concurrent_files、pattern_table_map，決定是否要處理該 table。
