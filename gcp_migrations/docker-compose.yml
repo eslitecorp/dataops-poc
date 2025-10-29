@@ -16,6 +16,8 @@ x-airflow-common:
     AIRFLOW__SCHEDULER__DAG_DIR_LIST_INTERVAL: "10"        # 預設 300 秒
     AIRFLOW__SCHEDULER__MIN_FILE_PROCESS_INTERVAL: "10"    # 預設 30 秒
     AIRFLOW__API__AUTH_BACKENDS: ${AIRFLOW_AUTH_BACKENDS}
+    AIRFLOW__LOGGING__BASE_LOG_FOLDER: /opt/airflow/logs
+    AIRFLOW__LOGGING__DAG_PROCESSOR_MANAGER_LOG_LOCATION: /opt/airflow/logs/dag_processor_manager/dag_processor_manager.log
     TZ: Asia/Taipei 
   volumes:
     - ./airflow/config/connections.json:/opt/airflow/connections.json
