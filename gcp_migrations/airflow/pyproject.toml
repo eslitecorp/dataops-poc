@@ -1,0 +1,11 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ssis-mirror"
+version = "0.1.0"
+dependencies = []
+
+[tool.setuptools]
+package-dir = {"" = "src"}
