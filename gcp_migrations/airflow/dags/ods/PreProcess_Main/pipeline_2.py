@@ -134,11 +134,8 @@ with DAG(
         """,
     )
 
-    # （可選）收斂占位
-    join = EmptyOperator(task_id="join", trigger_rule="none_failed_min_one_success")
 
     # 串接
     query_file_status >> decide_next
     decide_next >> go_left
     decide_next >> move_to_error_folder >> send_notification
-    [go_left, send_notification] >> join
