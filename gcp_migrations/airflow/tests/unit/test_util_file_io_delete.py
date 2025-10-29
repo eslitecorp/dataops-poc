@@ -5,7 +5,7 @@ import tempfile
 from types import SimpleNamespace
 import pytest
 
-from gcp_migrations.airflow.dags.ods.Util_File_IO_Delete.util_file_io_delete import _generate_src_file_path_list, _clean_old_files
+from gcp_migrations.airflow.dags.ods.Util_File_IO_Delete.main import _generate_src_file_path_list, _clean_old_files
 
 @pytest.fixture
 def mock_ti(monkeypatch):

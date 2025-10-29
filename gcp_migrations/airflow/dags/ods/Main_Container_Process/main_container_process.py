@@ -12,7 +12,7 @@ from airflow.utils.trigger_rule import TriggerRule
 TABLE_LIST = Variable.get("BUSINESS_TABLE_LIST", default_var="ORDERS,PRODUCTS,CUSTOMERS").split(",")
 
 with DAG(
-    dag_id="MainContainerProcess",
+    dag_id="MainContainerProcess_old",
     start_date=datetime(2025, 1, 1),
     schedule=None,           # 先手動觸發，避免排程干擾
     catchup=False,

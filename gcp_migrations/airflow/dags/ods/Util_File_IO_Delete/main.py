@@ -6,7 +6,7 @@ from datetime import datetime
 import os, glob, shutil, logging
 from typing import List
 
-DAG_ID = "util_file_io_delete"
+DAG_ID = "Util_File_IO_Delete"
 DEFAULT_FILES_PARAM = r"C:\data\a.csv;C:\data\b.csv"
 
 def _generate_src_file_path_list(**context) -> None:
@@ -32,6 +32,7 @@ def _generate_src_file_path_list(**context) -> None:
     paths: List[str] = [p.strip() for p in src.split(";") if p.strip()]
     logging.info("Parsed %d path(s): %s", len(paths), paths)
     context["ti"].xcom_push(key="srcFilePathList", value=paths)
+
 
 def _clean_old_files(**context) -> dict:
     """Delete files or folders listed in XCom.
