@@ -1,0 +1,71 @@
+spec_version: v1.0
+dag_id: preprocess_rawdatafile
+description: "Replicates SSIS PreProcess_RawDataFile with branches to util subflows."
+start_date: "2025-01-01"
+schedule_interval: null
+catchup: false
+max_active_runs: 1
+
+metadata:
+  owner: rex
+  lineage_id: "ODS.PreProcess_RawDataFile"
+  last_modified: "2025-10-31"
+
+default_args:
+  owner: dataops
+  retries: 1
+  retry_delay: 5m
+  email_on_failure: true
+  email: dataops@company.com
+
+params:
+  fileName: "ODS_SAP_CHECKFILE_20250101.CSV"
+
+connections:
+  mssql_primary:
+    conn_id: "mssql_primary"
+    conn_type: "mssql"
+
+observability:
+  alert_channels: ["slack://#dataops-alerts"]
+  sla_minutes: 15
+
+variables:
+  - name: file_status
+    type: int
+    scope: task
+
+tasks:
+  - id: check_file_status
+    type: MsSqlOperator
+    connection: mssql_primary
+    sql: "SELECT FILE_STATUS FROM dbo.FILE_REC WHERE FILE_NAME = '{{ params.fileName }}'"
+    outputs:
+      - name: file_status
+        type: int
+
+  - id: branch_decision
+    type: BranchPythonOperator
+    expression:
+      - condition: "{{ ti.xcom_pull(task_ids='check_file_status') | int <= 0 }}"
+        next: ["handle_invalid_file"]
+      - condition: "{{ ti.xcom_pull(task_ids='check_file_status') | int > 0 and ti.xcom_pull(task_ids='check_file_status') | int < 40 }}"
+        next: ["trigger_valid_file_process"]
+      - condition: "else"
+        next: ["trigger_other_path"]
+
+  - id: handle_invalid_file
+    type: TriggerDagRunOperator
+    trigger_dag_id: util_file_status_change
+
+  - id: trigger_valid_file_process
+    type: TriggerDagRunOperator
+    trigger_dag_id: util_etl_process
+
+  - id: trigger_other_path
+    type: TriggerDagRunOperator
+    trigger_dag_id: util_error_handler
+
+dependencies:
+  - upstream: ["check_file_status"]
+    downstream: ["branch_decision"]

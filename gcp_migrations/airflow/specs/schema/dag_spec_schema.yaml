@@ -1,0 +1,134 @@
+$schema: "http://json-schema.org/draft-07/schema#"
+title: Airflow DAG Spec Schema
+type: object
+required: [spec_version, dag_id, start_date, default_args, tasks]
+properties:
+  spec_version:
+    type: string
+    pattern: "^v\\d+\\.\\d+$"
+  metadata:
+    type: object
+    properties:
+      owner: { type: string }
+      lineage_id: { type: string }
+      last_modified: { type: string }
+  dag_id:
+    type: string
+    minLength: 1
+  description:
+    type: string
+  schedule_interval:
+    type:
+      - string
+      - "null"
+  catchup:
+    type: boolean
+    default: false
+  max_active_runs:
+    type: integer
+    minimum: 1
+    default: 1
+  start_date:
+    type: string
+    description: "ISO date (YYYY-MM-DD) or datetime (YYYY-MM-DDTHH:mm:ss)"
+    pattern: "^(\\d{4}-\\d{2}-\\d{2})(T\\d{2}:\\d{2}:\\d{2})?$"
+  params:
+    type: object
+    additionalProperties: true
+  default_args:
+    type: object
+    required: [owner, retries]
+    properties:
+      owner: { type: string }
+      email_on_failure: { type: boolean }
+      email: 
+        type: [array, string]
+      retries: { type: integer, minimum: 0 }
+      retry_delay: { type: string, description: "e.g. 5m / 30s / 1h" }
+  connections:
+    type: object
+    additionalProperties:
+      type: object
+      required: [conn_id, conn_type]
+      properties:
+        conn_id: { type: string }
+        conn_type: { type: string }
+        extras: { type: object }
+  variables:
+    type: array
+    items:
+      type: object
+      required: [name, type]
+      properties:
+        name: { type: string }
+        type: { type: string, enum: [string, int, float, bool, date, datetime] }
+        scope: { type: string, enum: [package, task], default: package }
+  observability:
+    type: object
+    properties:
+      alert_channels:
+        type: array
+        items: { type: string }
+      sla_minutes:
+        type: integer
+        minimum: 1
+  tasks:
+    type: array
+    minItems: 1
+    items:
+      type: object
+      required: [id, type]
+      properties:
+        id: { type: string, minLength: 1 }
+        type:
+          type: string
+          enum:
+            - MsSqlOperator
+            - BranchPythonOperator
+            - TriggerDagRunOperator
+            - PythonOperator
+            - EmptyOperator
+        sql: { type: string }
+        python_callable_ref: { type: string, description: "module:function 形式" }
+        trigger_dag_id: { type: string }
+        connection: { type: string, description: "connections.* 的key，引用上方connections" }
+        inputs:
+          type: array
+          items: { type: string }
+        outputs:
+          type: array
+          items:
+            type: object
+            required: [name, type]
+            properties:
+              name: { type: string }
+              type: { type: string, enum: [string, int, float, bool, json] }
+        expression:
+          type: array
+          description: "Branch 規則列表，依序判斷"
+          items:
+            type: object
+            required: [condition, next]
+            properties:
+              condition: { type: string, description: "Jinja或迷你語言" }
+              next:
+                type: array
+                items: { type: string }
+        retries: { type: integer, minimum: 0 }
+        retry_delay: { type: string }
+        trigger_rule:
+          type: string
+          enum: [all_success, all_failed, all_done, one_success, one_failed, none_failed, none_skipped, none_failed_min_one_success]
+  dependencies:
+    type: array
+    description: "顯式依賴關係；若未提供則預設串接順序依 tasks 順序連接"
+    items:
+      type: object
+      required: [upstream, downstream]
+      properties:
+        upstream:
+          type: array
+          items: { type: string }
+        downstream:
+          type: array
+          items: { type: string }
